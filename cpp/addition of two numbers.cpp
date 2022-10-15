@@ -4,8 +4,7 @@ using namespace std; // This is standard library
 
 int main()
 {
-    /* This is the main function
-    buhahahahahaha */
+    /* Get two inputs and output the sum */
 
     int no1, no2, ans;
 
