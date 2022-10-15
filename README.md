@@ -1,7 +1,4 @@
 # Learning
-
-![alt text](kavindukalinga/kavindukalinga/src/top.svg)
-
 <p align="left"> <img src="https://img.shields.io/github/languages/count/kavindukalinga/learning" alt="kavindukalinga" /></a> </p>
 <p align="left"> <img src="https://img.shields.io/github/last-commit/kavindukalinga/learning" alt="kavindukalinga" /></a> </p>
 
@@ -41,7 +38,7 @@
 
 ## Just a Python 🐍 Eating away my Contributions...😭
 ![snake gif](./src/github-contribution-grid-snake.svg)
--->
+
 </br>
 <p><img align="left" src="https://github-readme-stats.vercel.app/api/top-langs?username=kavindukalinga&show_icons=true&locale=en&layout=compact" alt="kavindukalinga" /></p>
 
@@ -50,3 +47,4 @@
 <p><img align="center" src="https://github-readme-streak-stats.herokuapp.com/?user=kavindukalinga&" alt="kavindukalinga" /></p>
 
 ![alt text](./src/btm.svg)
+-->
