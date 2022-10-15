@@ -1,7 +1,6 @@
 # Learning
-https://img.shields.io/github/languages/count/kavindukalinga/learning
 
-![alt text](./src/top.svg)
+![alt text](./kavindukalinga/src/top.svg)
 
 <p align="left"> <img src="https://img.shields.io/github/languages/count/kavindukalinga/learning" alt="kavindukalinga" /></a> </p>
 <p align="left"> <img src="https://img.shields.io/github/last-commit/kavindukalinga/learning" alt="kavindukalinga" /></a> </p>
