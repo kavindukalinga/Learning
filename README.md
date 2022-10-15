@@ -2,7 +2,6 @@
 <!-- shields.io -->
 <p align="left"> <img src="https://img.shields.io/github/languages/count/kavindukalinga/learning" alt="kavindukalinga" /> <img src="https://img.shields.io/github/languages/top/kavindukalinga/learning" alt="kavindukalinga" /></a> </p>
 <p align="left"> <img src="https://img.shields.io/github/last-commit/kavindukalinga/learning" alt="kavindukalinga" /></a> </p>
-<p align="left"> <img src="https://img.shields.io/github/languages/top/kavindukalinga/learning" alt="kavindukalinga" /></a> </p>
 
 <!--<p align="left"> <img src="https://komarev.com/ghpvc/?username=kavindukalinga&label=Profile%20views&color=0e75b6&style=flat" alt="kavindukalinga" /> </p>
 
