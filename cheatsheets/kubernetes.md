@@ -1,5 +1,5 @@
 k8s
-# Kubernetes
+# # </ Kubernetes >
 
 ## Getting Start
 
@@ -100,21 +100,24 @@ spec:
 kubectl delete pods nginx-deployment-86dcfdf4c6-kp979
 kkalinga@ISA-KKALINGA:~$ kubectl get pods -w
 ```
-. NAME                                READY   STATUS    RESTARTS   AGE
-. nginx-deployment-86dcfdf4c6-kp979   1/1     Running   0          18m
-. nginx-deployment-86dcfdf4c6-rxgf7   1/1     Running   0          18m
-. nginx-deployment-86dcfdf4c6-xnn8h   1/1     Running   0          18m
-. nginx-deployment-86dcfdf4c6-kp979   1/1     Terminating   0          18m
-. nginx-deployment-86dcfdf4c6-nhfp6   0/1     Pending       0          0s
-. nginx-deployment-86dcfdf4c6-nhfp6   0/1     Pending       0          0s
-. nginx-deployment-86dcfdf4c6-nhfp6   0/1     ContainerCreating   0          0s
-. nginx-deployment-86dcfdf4c6-kp979   0/1     Terminating         0          18m
-. nginx-deployment-86dcfdf4c6-kp979   0/1     Terminating         0          18m
-. nginx-deployment-86dcfdf4c6-kp979   0/1     Terminating         0          18m
-. nginx-deployment-86dcfdf4c6-kp979   0/1     Terminating         0          18m
-. nginx-deployment-86dcfdf4c6-nhfp6   1/1     Running             0          1s
+| NAME         |                       READY |  STATUS  |  RESTARTS |  AGE |
+|------------|------------|----------|-------------|--------|
+| nginx-deployment-86dcfdf4c6-kp979  | 1/1 |    Running  | 0        |  18m|
+| nginx-deployment-86dcfdf4c6-rxgf7  | 1/1 |    Running  | 0         | 18m|
+| nginx-deployment-86dcfdf4c6-xnn8h  | 1/1 |    Running   |0         | 18m|
+| nginx-deployment-86dcfdf4c6-kp979  | 1/1 |    Terminating|   0      |    18m|
+| nginx-deployment-86dcfdf4c6-nhfp6  | 0/1 |    Pending     |  0       |   0s|
+| nginx-deployment-86dcfdf4c6-nhfp6  | 0/1 |    Pending      | 0        |  0s|
+| nginx-deployment-86dcfdf4c6-nhfp6  | 0/1 |    ContainerCreating  | 0   |       0s|
+| nginx-deployment-86dcfdf4c6-kp979  | 0/1 |    Terminating         |0    |      18m|
+| nginx-deployment-86dcfdf4c6-kp979  | 0/1 |    Terminating     |    0     |     18m|
+| nginx-deployment-86dcfdf4c6-kp979  | 0/1 |    Terminating      |   0      |    18m|
+| nginx-deployment-86dcfdf4c6-kp979  | 0/1 |    Terminating       |  0       |   18m|
+| nginx-deployment-86dcfdf4c6-nhfp6  | 1/1 |    Running            | 0        |  1s|
 
 
-
+```bash
 kubectl get rs
 kubectl get all
+
+```
