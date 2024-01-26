@@ -1,5 +1,5 @@
 k8s
-# # </ Kubernetes >
+# </ Kubernetes >
 
 ## Getting Start
 
@@ -63,6 +63,9 @@ kubectl delete pods nginx
 
 
 ## Deployment
+
+https://kubernetes.io/docs/concepts/workloads/controllers/deployment/
+
 ```bash
 touch deployment.yml
 nano deployment.yml  # ctrl+X
@@ -116,8 +119,52 @@ kkalinga@ISA-KKALINGA:~$ kubectl get pods -w
 | nginx-deployment-86dcfdf4c6-nhfp6  | 1/1 |    Running            | 0        |  1s|
 
 
+
 ```bash
-kubectl get rs
+minikube status
 kubectl get all
+kubectl delete deploy nginx-deployment
+
+kubectl get pods -v=7 #max=9
+#verbocity level -> more information about API call
 
 ```
+
+## Services
+1. Cluster IP
+2. Node port
+3. Load Balancer
+
+https://kubernetes.io/docs/concepts/services-networking/service/
+
+```bash
+nano service.yml
+kubectl apply -f service.yml
+kubectl get svc 
+curl -L http://192.168.49.2:30007/demo
+kubectl edit svc python-django-sample-app
+cat service.yml
+```
+<!-- 
+apiVersion: v1
+kind: Service
+metadata:
+  name: python-django-sample-app
+spec:
+  type: NodePort
+  selector:
+    app: sample-python-app
+  ports:
+    - port: 80
+      # By default and for convenience, the `targetPort` is set to
+      # the same value as the `port` field.
+      targetPort: 8000
+      # Optional field
+      # By default and for convenience, the Kubernetes control plane
+      # will allocate a port from a range (default: 30000-32767)
+      nodePort: 30007
+ -->
+
+
+`sh <(curl -Ls https://kubeshark.co/install)`
+`kubeshark tap`

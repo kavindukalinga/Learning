@@ -3,7 +3,6 @@ linux
 
 ```bash
 
-
 cl<Tab>
 
 # Open a file:	
@@ -13,7 +12,6 @@ cl<Tab>
 		nano filename.text	# Ctrl+X - save and exit
 		vim filename.text	# i - insert, #Esc :wq - save and exit
 
-
 # Read text:
 		cat a.txt
 		more a.txt
@@ -22,8 +20,6 @@ cl<Tab>
 # kill an app (forcefully)		
 		pkill application_name
 		killall application_name
-
-
 
 
 ```
