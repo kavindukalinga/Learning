@@ -27,21 +27,17 @@ kubectl get po -A
 ls
 touch pod.yml
 nano pod.yml 
-```
-<!-- 
-apiVersion: v1
-kind: Pod
-metadata:
-    name: nginx
-spec:
-    containers:
-    - name: nginx
-      image: nginx:1.14.2
-      ports:
-      - containerPort: 80
+# apiVersion: v1
+# kind: Pod
+# metadata:
+#     name: nginx
+# spec:
+#     containers:
+#     - name: nginx
+#       image: nginx:1.14.2
+#       ports:
+#       - containerPort: 80
 
- -->
-```bash
 kubectl create -f pod.yml
 kubectl get pods
 kubectl get all
@@ -69,34 +65,32 @@ https://kubernetes.io/docs/concepts/workloads/controllers/deployment/
 ```bash
 touch deployment.yml
 nano deployment.yml  # ctrl+X
+# apiVersion: apps/v1
+# kind: Deployment
+# metadata:
+#   name: nginx-deployment
+#   labels:
+#     app: nginx
+# spec:
+#   replicas: 3
+#   selector:
+#     matchLabels:
+#       app: nginx
+#   template:
+#     metadata:
+#       labels:
+#         app: nginx
+#     spec:
+#       containers:
+#       - name: nginx
+#         image: nginx:1.14.2
+#         ports:
+#         - containerPort: 80
+
 kubectl apply -f deployment.yml
 # Auto creates deployment, replicat set, pods
 cat deployment.yml
 ```
-<!-- 
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: nginx-deployment
-  labels:
-    app: nginx
-spec:
-  replicas: 3
-  selector:
-    matchLabels:
-      app: nginx
-  template:
-    metadata:
-      labels:
-        app: nginx
-    spec:
-      containers:
-      - name: nginx
-        image: nginx:1.14.2
-        ports:
-        - containerPort: 80
- -->
-
 
 ## self healing
 ```bash
@@ -139,32 +133,83 @@ https://kubernetes.io/docs/concepts/services-networking/service/
 
 ```bash
 nano service.yml
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   name: python-django-sample-app
+# spec:
+#   type: NodePort
+#   selector:
+#     app: sample-python-app
+#   ports:
+#     - port: 80
+#       # By default and for convenience, the `targetPort` is set to
+#       # the same value as the `port` field.
+#       targetPort: 8000
+#       # Optional field
+#       # By default and for convenience, the Kubernetes control plane
+#       # will allocate a port from a range (default: 30000-32767)
+#       nodePort: 30007
+
 kubectl apply -f service.yml
 kubectl get svc 
-curl -L http://192.168.49.2:30007/demo
+minikube ip
+# http://192.168.49.2
+# nodePort: 30007
+curl -L http://192.168.49.2:30007/demo -v
+
+sh <(curl -Ls https://kubeshark.co/install)
+kubeshark tap
+
+# LoadBalancer Type
 kubectl edit svc python-django-sample-app
-cat service.yml
+
 ```
-<!-- 
-apiVersion: v1
-kind: Service
-metadata:
-  name: python-django-sample-app
-spec:
-  type: NodePort
-  selector:
-    app: sample-python-app
-  ports:
-    - port: 80
-      # By default and for convenience, the `targetPort` is set to
-      # the same value as the `port` field.
-      targetPort: 8000
-      # Optional field
-      # By default and for convenience, the Kubernetes control plane
-      # will allocate a port from a range (default: 30000-32767)
-      nodePort: 30007
- -->
+## Ingress
+https://kubernetes.io/docs/concepts/services-networking/ingress/
+
+```bash
+nano ingress.yml
+# apiVersion: networking.k8s.io/v1
+# kind: Ingress
+# metadata:
+#   name: ingress-example
+# spec:
+#   rules:
+#   - host: "foo.bar.com"
+#     http:
+#       paths:
+#       - pathType: Prefix
+#         path: "/bar"
+#         backend:
+#           service:
+#             name: python-django-sample-app
+#             port:
+#               number: 80
+
+kubectl apply -f ingress.yml
+kubectl get ingress
+# NAME              CLASS    HOSTS         ADDRESS   PORTS   AGE
+# ingress-example   <none>   foo.bar.com             80      19s
+
+minikube addons enable ingress
+kubectl get pods -A | grep nginx
+# ingress-nginx   ingress-nginx-admission-create-72bfr        0/1 Completed
+# ingress-nginx   ingress-nginx-admission-patch-jv9rp         0/1 Completed
+# ingress-nginx   ingress-nginx-controller-7c6974c4d8-4sgcx   1/1  Running
+
+kubectl logs ingress-nginx-controller-7c6974c4d8-4sgcx -n ingress-nginx
+# Namespace:"default", Name:"ingress-example", UID:"0273ed46-e68c-47c9-9b31-4088536d7612", APIVersion:"networking.k8s.io/v1", ResourceVersion:"47253", FieldPath:""}): type: 'Normal' reason: 'Sync' Scheduled for sync
+
+kubectl get ingress
+# NAME              CLASS    HOSTS         ADDRESS        PORTS   AGE
+# ingress-example   <none>   foo.bar.com   192.168.49.2   80      23m
+
+ping 192.158.49.2
+ping foo.bar.com/bar
+# For minicube:   $ sudo vim /etc/hosts
+# foo.bar.com 192.168.49.2
+
+```
 
 
-`sh <(curl -Ls https://kubeshark.co/install)`
-`kubeshark tap`
