@@ -212,4 +212,103 @@ ping foo.bar.com/bar
 
 ```
 
+## ConfigMap & VolumeMounts
+```bash
+kubectl get deploy
+kubectl delete deploy sample-python-app
+nano cm.yml
+# apiVersion: v1
+# kind: ConfigMap
+# metadata:
+#   name: test-cm
+# data:
+#   db-port: "3306"
 
+kubectl apply -f cm.yml
+kubectl get cm
+kubectl describe cm test-cm
+nano deployment.yml
+      # containers:
+      # - name: python-app
+      #   image: abhishekf5/python-sample-app-demo:v1
+      #   env:
+      #     - name: DB-PORT
+      #       valueFrom:
+      #         configMapKeyRef:
+      #           name: test-cm
+      #           key: db-port
+      #   ports:
+      #   - containerPort: 8000
+
+kubectl apply -f deployment.yml
+kubectl get pods
+kubectl exec -it sample-python-app-5665875f56-2s5hs -- /bin/bash
+  root@sample-python-app-5665875f56-2s5hs:/app# env | grep DB
+  # >>> DB-PORT=3306
+
+## Mount Volumes:
+nano deployment.yml 
+      # containers:
+      # - name: python-app
+      #   image: abhishekf5/python-sample-app-demo:v1
+      #   volumeMounts:
+      #     - name: db-connection
+      #       mountPath: /opt
+      #   ports:
+      #   - containerPort: 8000
+      # volumes:
+      #   - name: db-connection
+      #     configMap:
+      #       name: test-cm
+
+kubectl apply -f deployment.yml
+kubectl get pods
+kubectl exec -it sample-python-app-6c5b459cc9-4x954 -- /bin/bash
+  root@sample-python-app-6c5b459cc9-4x954:/app# env | grep DB
+  root@sample-python-app-6c5b459cc9-4x954:/app# ls /opt
+  # db-port
+  root@sample-python-app-6c5b459cc9-4x954:/app# cat /opt/db-port | more
+  # 3306
+
+nano cm.yml 
+# data:
+#   db-port: "3307"
+
+kubectl apply -f cm.yml
+kubectl get pods  # Pods have not restarted
+kubectl exec -it sample-python-app-5894dd7f76-jbtrs -- cat /opt/db-port | more
+  # 3307
+```
+
+## Secrets
+```bash
+kubectl create secret generic test-secret --from-literal=db-port="3306"
+# Can do the .yml method as well
+kubectl describe secret test-secret
+# Data
+# ====
+# db-port:  4 bytes
+
+kubectl edit secret test-secret
+# apiVersion: v1
+# data:
+#   db-port: MzMwNg==
+# kind: Secret
+# metadata:
+#   creationTimestamp: "2024-01-29T13:09:23Z"
+#   name: test-secret
+#   namespace: default
+#   resourceVersion: "60704"
+#   uid: 8d9fff7c-0707-4912-9e37-f92fadb63206
+# type: Opaque
+
+echo MzMwNg== | base64 --decode
+# 3306
+# ReadMore: How to encrypt etcd into secrets
+```
+
+## Useful commands:
+```bash
+kubectl exec -it sample-python-app-5894dd7f76-jbtrs -- /bin/bash
+
+```
