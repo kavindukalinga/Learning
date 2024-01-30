@@ -307,8 +307,49 @@ echo MzMwNg== | base64 --decode
 # ReadMore: How to encrypt etcd into secrets
 ```
 
+## Monitoring
+<img src="monitoring.png">
+```bash
+## Install helm
+# https://helm.sh/docs/intro/install/
+helm version  # make sure version > 3.12
+
+## add prometheus
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+# Try this twice: respond should be changed from "has been added" to "already exists"
+helm repo update
+helm install prometheus prometheus-community/prometheus # Read the text
+kubectl expose service prometheus-server --type=NodePort --target-port=9090 --name=prometheus-server-ext
+
+helm list
+
+kubectl get pods # takes some time
+kubectl get svc
+# prometheus-server-ext                 NodePort    10.108.102.49    <none>        80:30841/TCP   2s
+
+minikube ip
+# 192.168.49.2
+
+# Visit from your browser: http://192.168.49.2:30841
+
+## add Grafana
+helm repo add grafana https://grafana.github.io/helm-charts
+helm repo update
+helm install grafana grafana/grafana
+kubectl expose service grafana — type=NodePort — target-port=3000 — name=grafana-ext
+
+# Add data source > prometheus > connection IP from ^ > build & test
+# Home > Dashboards > Import Dashboards
+# 3662: Dashboards:Prometheus 2.0 Overview    # i.e.
+```
+
+
 ## Useful commands:
 ```bash
 kubectl exec -it sample-python-app-5894dd7f76-jbtrs -- /bin/bash
+
+minikube start
+minikube addons enable metrics-server
+minikube dashboard
 
 ```
