@@ -309,6 +309,7 @@ echo MzMwNg== | base64 --decode
 
 ## Monitoring
 <img src="monitoring.png">
+
 ```bash
 ## Install helm
 # https://helm.sh/docs/intro/install/
