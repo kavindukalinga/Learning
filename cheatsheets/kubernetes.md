@@ -353,4 +353,10 @@ minikube start
 minikube addons enable metrics-server
 minikube dashboard
 
+kubectl create deployment nginx --image=nginx --replicas=3
+kubectl get python-django-sample-app
+kubectl expose deployment nginx --port=8000 --target-port=80
+kubectl get svc 
+kubectl port-forward 
+
 ```
