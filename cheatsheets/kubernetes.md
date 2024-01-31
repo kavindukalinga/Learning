@@ -348,6 +348,7 @@ kubectl expose service grafana — type=NodePort — target-port=3000 — name=g
 ## Useful commands:
 ```bash
 kubectl exec -it sample-python-app-5894dd7f76-jbtrs -- /bin/bash
+eval $(minikube -p minikube docker-env)
 
 minikube start
 minikube addons enable metrics-server
@@ -359,4 +360,9 @@ kubectl expose deployment nginx --port=8000 --target-port=80
 kubectl get svc 
 kubectl port-forward 
 
+
 ```
+
+## Openshift Sandbox
+
+https://developers.redhat.com/developer-sandbox/activities/learn-kubernetes-using-red-hat-developer-sandbox-openshift
