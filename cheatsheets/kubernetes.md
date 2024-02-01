@@ -348,6 +348,8 @@ kubectl expose service grafana — type=NodePort — target-port=3000 — name=g
 ## Useful commands:
 ```bash
 kubectl exec -it sample-python-app-5894dd7f76-jbtrs -- /bin/bash
+kubectl run -i --tty --rm --image=alpine --restart=Never -- sh
+
 eval $(minikube -p minikube docker-env)
 
 minikube start
@@ -360,6 +362,18 @@ kubectl expose deployment nginx --port=8000 --target-port=80
 kubectl get svc 
 kubectl port-forward 
 
+ minikube start
+ minikube status
+ minikube ssh
+ kubectl cluster-info
+ minikube ip
+ kubectl get nodes
+ kubectl get pods
+ kubectl get namespaces
+ kubectl get pods --namespace=kube-system
+ kubectl run nginx --image=nginx
+ kubectl get pods
+ kubectl describe pod nginx
 
 ```
 
