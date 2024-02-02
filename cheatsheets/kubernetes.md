@@ -1,13 +1,12 @@
-k8s
 # </ Kubernetes >
 
 ## Getting Start
 
-https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/
+<https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/>
 
-https://minikube.sigs.k8s.io/docs/start/
+<https://minikube.sigs.k8s.io/docs/start/>
 
-```bash   
+```bash
 curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
 sudo install minikube-linux-amd64 /usr/local/bin/minikube
 minikube start
@@ -23,6 +22,7 @@ kubectl get po -A
 ```
 
 ## Running Pods
+
 ```bash
 ls
 touch pod.yml
@@ -48,19 +48,18 @@ kubectl apply -f pod.yml
 kubectl get pods -o wide
 # Copy the ip address <10.224.0.0>
 minikube ssh
-	curl 10.244.0.0
-	exit
+ curl 10.244.0.0
+ exit
 
 kubectl get pods
-kubctl logs nginx
+kubectl logs nginx
 kubectl describe pod nginx
 kubectl delete pods nginx
 ```
 
-
 ## Deployment
 
-https://kubernetes.io/docs/concepts/workloads/controllers/deployment/
+<https://kubernetes.io/docs/concepts/workloads/controllers/deployment/>
 
 ```bash
 touch deployment.yml
@@ -88,15 +87,17 @@ nano deployment.yml  # ctrl+X
 #         - containerPort: 80
 
 kubectl apply -f deployment.yml
-# Auto creates deployment, replicat set, pods
+# Auto creates deployment, replica set, pods
 cat deployment.yml
 ```
 
 ## self healing
+
 ```bash
 kubectl delete pods nginx-deployment-86dcfdf4c6-kp979
 kkalinga@ISA-KKALINGA:~$ kubectl get pods -w
 ```
+
 | NAME         |                       READY |  STATUS  |  RESTARTS |  AGE |
 |------------|------------|----------|-------------|--------|
 | nginx-deployment-86dcfdf4c6-kp979  | 1/1 |    Running  | 0        |  18m|
@@ -112,24 +113,23 @@ kkalinga@ISA-KKALINGA:~$ kubectl get pods -w
 | nginx-deployment-86dcfdf4c6-kp979  | 0/1 |    Terminating       |  0       |   18m|
 | nginx-deployment-86dcfdf4c6-nhfp6  | 1/1 |    Running            | 0        |  1s|
 
-
-
 ```bash
 minikube status
 kubectl get all
 kubectl delete deploy nginx-deployment
 
 kubectl get pods -v=7 #max=9
-#verbocity level -> more information about API call
+#verbosity level -> more information about API call
 
 ```
 
 ## Services
+
 1. Cluster IP
 2. Node port
 3. Load Balancer
 
-https://kubernetes.io/docs/concepts/services-networking/service/
+<https://kubernetes.io/docs/concepts/services-networking/service/>
 
 ```bash
 nano service.yml
@@ -165,8 +165,10 @@ kubeshark tap
 kubectl edit svc python-django-sample-app
 
 ```
+
 ## Ingress
-https://kubernetes.io/docs/concepts/services-networking/ingress/
+
+<https://kubernetes.io/docs/concepts/services-networking/ingress/>
 
 ```bash
 nano ingress.yml
@@ -207,12 +209,13 @@ kubectl get ingress
 
 ping 192.158.49.2
 ping foo.bar.com/bar
-# For minicube:   $ sudo vim /etc/hosts
+# For minikube:   $ sudo vim /etc/hosts
 # foo.bar.com 192.168.49.2
 
 ```
 
 ## ConfigMap & VolumeMounts
+
 ```bash
 kubectl get deploy
 kubectl delete deploy sample-python-app
@@ -281,6 +284,7 @@ kubectl exec -it sample-python-app-5894dd7f76-jbtrs -- cat /opt/db-port | more
 ```
 
 ## Secrets
+
 ```bash
 kubectl create secret generic test-secret --from-literal=db-port="3306"
 # Can do the .yml method as well
@@ -308,7 +312,8 @@ echo MzMwNg== | base64 --decode
 ```
 
 ## Monitoring
-<img src="monitoring.png">
+
+![Monitoring](monitoring.png)
 
 ```bash
 ## Install helm
@@ -344,8 +349,8 @@ kubectl expose service grafana — type=NodePort — target-port=3000 — name=g
 # 3662: Dashboards:Prometheus 2.0 Overview    # i.e.
 ```
 
+## Useful commands
 
-## Useful commands:
 ```bash
 alias k="kubectl"
 kubectl exec -it sample-python-app-5894dd7f76-jbtrs -- /bin/bash
@@ -379,6 +384,7 @@ kubectl port-forward
 ```
 
 ## Self Tutorial
+
 ```bash
 minikube start
 alias k="kubectl"
@@ -410,4 +416,4 @@ k rollout status deploy webapp11
 
 ## Openshift Sandbox
 
-https://developers.redhat.com/developer-sandbox/activities/learn-kubernetes-using-red-hat-developer-sandbox-openshift
+<https://developers.redhat.com/developer-sandbox/activities/learn-kubernetes-using-red-hat-developer-sandbox-openshift>
