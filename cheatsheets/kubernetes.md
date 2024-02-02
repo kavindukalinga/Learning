@@ -347,6 +347,7 @@ kubectl expose service grafana — type=NodePort — target-port=3000 — name=g
 
 ## Useful commands:
 ```bash
+alias k="kubectl"
 kubectl exec -it sample-python-app-5894dd7f76-jbtrs -- /bin/bash
 kubectl run -i --tty --rm --image=alpine --restart=Never -- sh
 
@@ -375,6 +376,36 @@ kubectl port-forward
  kubectl get pods
  kubectl describe pod nginx
 
+```
+
+## Self Tutorial
+```bash
+minikube start
+alias k="kubectl"
+
+# session 0:
+k create deployment nginx-deployment --image=nginx
+k describe deployment nginx-deployment
+k describe pod nginx-deployment-6d6565499c-jrbpq
+k scale deployment nginx-deployment --replicas=5
+k scale deployment nginx-deployment --replicas=3
+k expose deployment nginx-deployment --port=8080 --target-port=80
+minikube ssh
+
+# session 1: custom image 
+k create deployment kkdatapro --image=kavindukalinga/dataprocessing
+k expose deployment kkdatapro --type=NodePort --port=5000
+k get svc | grep kkdata
+minikube service kkdatapro # direct to the website
+minikube service kkdatapro --url # get the url
+
+# session 2: version upgrade
+k create deployment webapp11 --image=docker pull bstashchuk/k8s-web-hello
+k scale deployment webapp11 --replicas=3
+k expose deployment webapp11 --type=LoadBalancer --port=3000
+minikube service webapp11
+k set image deployment webapp11 k8s-web-hello=bstashchuk/k8s-web-hello:2.0.0
+k rollout status deploy webapp11
 ```
 
 ## Openshift Sandbox
