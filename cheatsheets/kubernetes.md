@@ -355,6 +355,7 @@ kubectl expose service grafana — type=NodePort — target-port=3000 — name=g
 alias k="kubectl"
 kubectl exec -it sample-python-app-5894dd7f76-jbtrs -- /bin/bash
 kubectl run -i --tty --rm --image=alpine --restart=Never -- sh
+kubectl run nginx --image=nginx --dry-run=client -o yaml > nginx.yaml
 
 eval $(minikube -p minikube docker-env)
 
@@ -412,6 +413,7 @@ k expose deployment webapp11 --type=LoadBalancer --port=3000
 minikube service webapp11
 k set image deployment webapp11 k8s-web-hello=bstashchuk/k8s-web-hello:2.0.0
 k rollout status deploy webapp11
+k delete all --all
 ```
 
 ## Openshift Sandbox
