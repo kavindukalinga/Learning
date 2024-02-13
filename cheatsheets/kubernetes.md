@@ -311,6 +311,166 @@ echo MzMwNg== | base64 --decode
 # ReadMore: How to encrypt etcd into secrets
 ```
 
+## Encrypting Secret at Rest
+
+https://kubernetes.io/docs/tasks/administer-cluster/encrypt-data/
+
+```bash
+kubectl create secret generic my-secret --from-literal=key1=supersecret
+k get secret
+k describe secret my-secret 
+k get secret my-secret -o yaml
+var/lib/minikube/certs/etcd 
+```
+
+## RBAC
+```bash
+
+k get roles -A
+kubectl describe rolebinding kube-proxy -n kube-system
+k auth can-i get pods --as dev-user
+
+# To create a Role:- 
+kubectl create role developer --namespace=default --verb=list,create,delete --resource=pods
+
+# To create a RoleBinding:- 
+kubectl create rolebinding dev-user-binding --namespace=default --role=developer --user=dev-user
+#OR
+kubectl apply -f _.yaml
+    # kind: Role
+    # apiVersion: rbac.authorization.k8s.io/v1
+    # metadata:
+    #   namespace: default
+    #   name: developer
+    # rules:
+    # - apiGroups: [""]
+    #   resources: ["pods"]
+    #   verbs: ["list", "create","delete"]
+
+    # ---
+    # kind: RoleBinding
+    # apiVersion: rbac.authorization.k8s.io/v1
+    # metadata:
+    #   name: dev-user-binding
+    # subjects:
+    # - kind: User
+    #   name: dev-user
+    #   apiGroup: rbac.authorization.k8s.io
+    # roleRef:
+    #   kind: Role
+    #   name: developer
+    #   apiGroup: rbac.authorization.k8s.io
+
+k auth can-i list pods --as dev-user  # >>> yes
+
+## Cluster Roles & Cluster Role Bindings
+k get clusterrole | wc -l
+k get clusterrolebindings.rbac.authorization.k8s.io | wc -l
+k api-resources
+
+k create clusterrole storage-admin --resources=persistentvolumes,storageclasses --verb=list,create,get,watch
+k create clusterrolebinding michelle-storage-admin --user=michelle --clusterrole=storage-admin 
+
+# OR
+k apply -f _.yaml
+    # ---
+    # kind: ClusterRole
+    # apiVersion: rbac.authorization.k8s.io/v1
+    # metadata:
+    #   name: storage-admin
+    # rules:
+    # - apiGroups: [""]
+    #   resources: ["persistentvolumes"]
+    #   verbs: ["get", "watch", "list", "create", "delete"]
+    # - apiGroups: ["storage.k8s.io"]
+    #   resources: ["storageclasses"]
+    #   verbs: ["get", "watch", "list", "create", "delete"]
+
+    # ---
+    # kind: ClusterRoleBinding
+    # apiVersion: rbac.authorization.k8s.io/v1
+    # metadata:
+    #   name: michelle-storage-admin
+    # subjects:
+    # - kind: User
+    #   name: michelle
+    #   apiGroup: rbac.authorization.k8s.io
+    # roleRef:
+    #   kind: ClusterRole
+    #   name: storage-admin
+    #   apiGroup: rbac.authorization.k8s.io
+kubectl auth can-i list storageclasses --as michelle  # >>>yes
+
+```
+
+## Service Accounts
+```bash
+k apply -f _.yaml
+    # apiVersion: apps/v1
+    # kind: Deployment
+    # metadata:
+    #   name: web-dashboard
+    # spec:
+    #   progressDeadlineSeconds: 600
+    #   replicas: 1
+    #   selector:
+    #     matchLabels:
+    #       name: web-dashboard
+    #   template:
+    #     metadata:
+    #       labels:
+    #         name: web-dashboard
+    #     spec:
+    #       containers:
+    #       - env:
+    #         - name: PYTHONUNBUFFERED
+    #           value: "1"
+    #         image: gcr.io/kodekloud/customimage/my-kubernetes-dashboard
+    #         imagePullPolicy: Always
+    #         name: web-dashboard
+    #         ports:
+    #         - containerPort: 8080
+
+kubectl create serviceaccount dashboard-sa
+
+cat /var/rbac/dashboard-sa-role-binding.yaml 
+    # ---
+    # kind: RoleBinding
+    # apiVersion: rbac.authorization.k8s.io/v1
+    # metadata:
+    #   name: read-pods
+    #   namespace: default
+    # subjects:
+    # - kind: ServiceAccount
+    #   name: dashboard-sa # Name is case sensitive
+    #   namespace: default
+    # roleRef:
+    #   kind: Role #this must be Role or ClusterRole
+    #   name: pod-reader # this must match the name of the Role or ClusterRole you wish to bind to
+    #   apiGroup: rbac.authorization.k8s.io
+cat /var/rbac/pod-reader-role.yaml
+    # ---
+    # kind: Role
+    # apiVersion: rbac.authorization.k8s.io/v1
+    # metadata:
+    #   namespace: default
+    #   name: pod-reader
+    # rules:
+    # - apiGroups:
+    #   - ''
+    #   resources:
+    #   - pods
+    #   verbs:
+    #   - get
+    #   - watch
+    #   - list
+
+kubectl create token dashboard-sa
+kubectl set serviceaccount deploy/web-dashboard dashboard-sa
+```
+
+
+
 ## Monitoring
 
 ![Monitoring](monitoring.png)
@@ -349,10 +509,84 @@ kubectl expose service grafana — type=NodePort — target-port=3000 — name=g
 # 3662: Dashboards:Prometheus 2.0 Overview    # i.e.
 ```
 
+## kubernetes upgrade
+```bash
+## Control plane
+kubectl drain controlplane --ignore-daemonsets
+apt update
+apt-get install kubeadm=1.27.0-00
+kubeadm upgrade apply v1.27.0
+# Note that the above steps can take a few minutes to complete.
+apt-get install kubelet=1.27.0-00 
+systemctl daemon-reload
+systemctl restart kubelet
+kubectl uncordon controlplane
+
+## Worker nodes
+kubectl drain node01 --ignore-daemonsets
+ssh node01
+apt-get update
+apt-get install kubeadm=1.27.0-00
+kubeadm upgrade node
+apt-get install kubelet=1.27.0-00 
+systemctl daemon-reload
+systemctl restart kubelet
+exit
+kubectl uncordon node01 
+
+```
+
+## Backup and Restore
+```bash
+## Backup snapshot
+ETCDCTL_API=3 etcdctl --endpoints=https://[127.0.0.1]:2379 \
+--cacert=/etc/kubernetes/pki/etcd/ca.crt \
+--cert=/etc/kubernetes/pki/etcd/server.crt \
+--key=/etc/kubernetes/pki/etcd/server.key \ 
+snapshot save /opt/snapshot-pre-boot.db
+
+## Restore snapshot
+ETCDCTL_API=3 etcdctl  --data-dir /var/lib/etcd-from-backup \
+snapshot restore /opt/snapshot-pre-boot.db
+
+vim /etc/kubernetes/manifests/etcd.yaml
+      # volumes:
+      # - hostPath:
+      #     path: /var/lib/etcd-from-backup
+      #     type: DirectoryOrCreate
+      #   name: etcd-data
+
+watch "crictl ps | grep etcd"
+```
+
+## Certificate Requests
+```bash
+## csrrequest.yaml
+  # apiVersion: certificates.k8s.io/v1
+  # kind: CertificateSigningRequest
+  # metadata:
+  #   name: akshay
+  # spec:
+  #   groups:
+  #   - system:authenticated
+  #   request: <req in base 64>
+  #   signerName: kubernetes.io/kube-apiserver-client
+  #   usages:
+  #   - client auth
+kubectl apply -f csrrequest.yaml
+kubectl get csr 
+kubectl certificate approve/deny akshay
+
+```
+
+
 ## Useful commands
 
 ```bash
-alias k="kubectl"
+alias k="kubectl"kubectl describe pod kube-apiserver-controlplane -n kube-system
+k auth can-i create deploy
+kubectl describe pod kube-apiserver -n kube-system
+
 kubectl exec -it sample-python-app-5894dd7f76-jbtrs -- /bin/bash
 kubectl run -i --tty --rm --image=alpine --restart=Never -- sh
 kubectl run nginx --image=nginx --dry-run=client -o yaml > nginx.yaml
@@ -419,3 +653,19 @@ k delete all --all
 ## Openshift Sandbox
 
 <https://developers.redhat.com/developer-sandbox/activities/learn-kubernetes-using-red-hat-developer-sandbox-openshift>
+
+
+docker exec -it container_name_or_id /bin/bash
+
+
+## Udemy
+```bash
+kubectl taint nodes node01 spray=mortein:NoSchedule
+kubectl run nginx --image=nginx --dry-run=client -o yaml > nginx-pod.yaml
+kubectl label node node01 color=blue
+kubectl create secret generic db-secret --from-literal=DB_Host=sql01 --from-literal=DB_User=root --from-literal=DB_Password=password123
+
+kubectl -n elastic-stack -it app -- cat /log/app.log  # app=pod name
+```
+
+
