@@ -212,6 +212,245 @@ ping foo.bar.com/bar
 # For minikube:   $ sudo vim /etc/hosts
 # foo.bar.com 192.168.49.2
 
+## Ingress
+k apply -f _.yaml
+    # apiVersion: networking.k8s.io/v1
+    # kind: Ingress
+    # metadata:
+    #   annotations:
+    #     nginx.ingress.kubernetes.io/rewrite-target: /
+    #     nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    #   name: ingress-wear-watch
+    #   namespace: app-space
+    # spec:
+    #   rules:
+    #   - http:
+    #       paths:
+    #       - backend:
+    #           service:
+    #             name: wear-service
+    #             port: 
+    #               number: 8080
+    #         path: /wear
+    #         pathType: Prefix
+    #       - backend:
+    #           service:
+    #             name: video-service
+    #             port: 
+    #               number: 8080
+    #         path: /stream
+    #         pathType: Prefix
+    #       - backend:
+    #           service:
+    #             name: food-service
+    #             port: 
+    #               number: 8080
+    #         path: /eat
+    #         pathType: Prefix
+
+k create ingress ingress-pay -n critical-space --rule="/pay=pay-service:8282"
+k edit ingress ingress-pay -n critical-space
+    #   annotations:
+    #     nginx.ingress.kubernetes.io/rewrite-target: /
+
+#### From the scratch:
+
+controlplane ~ ➜  k get deploy -A
+# NAMESPACE     NAME              READY   UP-TO-DATE   AVAILABLE   AGE
+# app-space     default-backend   1/1     1            1           25s
+# app-space     webapp-video      1/1     1            1           26s
+# app-space     webapp-wear       1/1     1            1           26s
+# kube-system   coredns
+
+kubectl create namespace ingress-nginx
+kubectl create configmap ingress-nginx-controller --namespace ingress-nginx
+kubectl create serviceaccount ingress-nginx --namespace ingress-nginx
+kubectl create serviceaccount ingress-nginx-admission --namespace ingress-nginx
+# create the Roles, RoleBindings, ClusterRoles, and ClusterRoleBindings for the ServiceAccount
+k get roles -n ingress-nginx 
+# NAME                      CREATED AT
+# ingress-nginx             2024-02-15T08:55:15Z
+# ingress-nginx-admission   2024-02-15T08:55:15Z
+
+k get rolebindings.rbac.authorization.k8s.io -n ingress-nginx 
+# NAME                      ROLE                           AGE
+# ingress-nginx             Role/ingress-nginx             87s
+# ingress-nginx-admission   Role/ingress-nginx-admission   87s
+
+kubectl apply ingress-controller.yaml
+    # apiVersion: apps/v1
+    # kind: Deployment
+    # metadata:
+    #   labels:
+    #     app.kubernetes.io/component: controller
+    #     app.kubernetes.io/instance: ingress-nginx
+    #     app.kubernetes.io/managed-by: Helm
+    #     app.kubernetes.io/name: ingress-nginx
+    #     app.kubernetes.io/part-of: ingress-nginx
+    #     app.kubernetes.io/version: 1.1.2
+    #     helm.sh/chart: ingress-nginx-4.0.18
+    #   name: ingress-nginx-controller
+    #   namespace: ingress-nginx
+    # spec:
+    #   minReadySeconds: 0
+    #   revisionHistoryLimit: 10
+    #   selector:
+    #     matchLabels:
+    #       app.kubernetes.io/component: controller
+    #       app.kubernetes.io/instance: ingress-nginx
+    #       app.kubernetes.io/name: ingress-nginx
+    #   template:
+    #     metadata:
+    #       labels:
+    #         app.kubernetes.io/component: controller
+    #         app.kubernetes.io/instance: ingress-nginx
+    #         app.kubernetes.io/name: ingress-nginx
+    #     spec:
+    #       containers:
+    #       - args:
+    #         - /nginx-ingress-controller
+    #         - --publish-service=$(POD_NAMESPACE)/ingress-nginx-controller
+    #         - --election-id=ingress-controller-leader
+    #         - --watch-ingress-without-class=true
+    #         - --default-backend-service=app-space/default-http-backend
+    #         - --controller-class=k8s.io/ingress-nginx
+    #         - --ingress-class=nginx
+    #         - --configmap=$(POD_NAMESPACE)/ingress-nginx-controller
+    #         - --validating-webhook=:8443
+    #         - --validating-webhook-certificate=/usr/local/certificates/cert
+    #         - --validating-webhook-key=/usr/local/certificates/key
+    #         env:
+    #         - name: POD_NAME
+    #           valueFrom:
+    #             fieldRef:
+    #               fieldPath: metadata.name
+    #         - name: POD_NAMESPACE
+    #           valueFrom:
+    #             fieldRef:
+    #               fieldPath: metadata.namespace
+    #         - name: LD_PRELOAD
+    #           value: /usr/local/lib/libmimalloc.so
+    #         image: registry.k8s.io/ingress-nginx/controller:v1.1.2@sha256:28b11ce69e57843de44e3db6413e98d09de0f6688e33d4bd384002a44f78405c
+    #         imagePullPolicy: IfNotPresent
+    #         lifecycle:
+    #           preStop:
+    #             exec:
+    #               command:
+    #               - /wait-shutdown
+    #         livenessProbe:
+    #           failureThreshold: 5
+    #           httpGet:
+    #             path: /healthz
+    #             port: 10254
+    #             scheme: HTTP
+    #           initialDelaySeconds: 10
+    #           periodSeconds: 10
+    #           successThreshold: 1
+    #           timeoutSeconds: 1
+    #         name: controller
+    #         ports:
+    #         - name: http
+    #           containerPort: 80
+    #           protocol: TCP
+    #         - containerPort: 443
+    #           name: https
+    #           protocol: TCP
+    #         - containerPort: 8443
+    #           name: webhook
+    #           protocol: TCP
+    #         readinessProbe:
+    #           failureThreshold: 3
+    #           httpGet:
+    #             path: /healthz
+    #             port: 10254
+    #             scheme: HTTP
+    #           initialDelaySeconds: 10
+    #           periodSeconds: 10
+    #           successThreshold: 1
+    #           timeoutSeconds: 1
+    #         resources:
+    #           requests:
+    #             cpu: 100m
+    #             memory: 90Mi
+    #         securityContext:
+    #           allowPrivilegeEscalation: true
+    #           capabilities:
+    #             add:
+    #             - NET_BIND_SERVICE
+    #             drop:
+    #             - ALL
+    #           runAsUser: 101
+    #         volumeMounts:
+    #         - mountPath: /usr/local/certificates/
+    #           name: webhook-cert
+    #           readOnly: true
+    #       dnsPolicy: ClusterFirst
+    #       nodeSelector:
+    #         kubernetes.io/os: linux
+    #       serviceAccountName: ingress-nginx
+    #       terminationGracePeriodSeconds: 300
+    #       volumes:
+    #       - name: webhook-cert
+    #         secret:
+    #           secretName: ingress-nginx-admission
+
+    # ---
+
+    # apiVersion: v1
+    # kind: Service
+    # metadata:
+    #   creationTimestamp: null
+    #   labels:
+    #     app.kubernetes.io/component: controller
+    #     app.kubernetes.io/instance: ingress-nginx
+    #     app.kubernetes.io/managed-by: Helm
+    #     app.kubernetes.io/name: ingress-nginx
+    #     app.kubernetes.io/part-of: ingress-nginx
+    #     app.kubernetes.io/version: 1.1.2
+    #     helm.sh/chart: ingress-nginx-4.0.18
+    #   name: ingress-nginx-controller
+    #   namespace: ingress-nginx
+    # spec:
+    #   ports:
+    #   - port: 80
+    #     protocol: TCP
+    #     targetPort: 80
+    #     nodePort: 30080
+    #   selector:
+    #     app.kubernetes.io/component: controller
+    #     app.kubernetes.io/instance: ingress-nginx
+    #     app.kubernetes.io/name: ingress-nginx
+    #   type: NodePort
+
+kubectl apply -f ingress-resource.yaml
+    # apiVersion: networking.k8s.io/v1
+    # kind: Ingress
+    # metadata:
+    #   name: ingress-wear-watch
+    #   namespace: app-space
+    #   annotations:
+    #     nginx.ingress.kubernetes.io/rewrite-target: /
+    #     nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    # spec:
+    #   rules:
+    #   - http:
+    #       paths:
+    #       - path: /wear
+    #         pathType: Prefix
+    #         backend:
+    #           service:
+    #            name: wear-service
+    #            port: 
+    #             number: 8080
+    #       - path: /watch
+    #         pathType: Prefix
+    #         backend:
+    #           service:
+    #            name: video-service
+    #            port:
+    #             number: 8080
+
+
 ```
 
 ## ConfigMap & VolumeMounts
@@ -281,6 +520,83 @@ kubectl apply -f cm.yml
 kubectl get pods  # Pods have not restarted
 kubectl exec -it sample-python-app-5894dd7f76-jbtrs -- cat /opt/db-port | more
   # 3307
+```
+
+## Persistent Volumes
+```bash
+    # k apply -f _.yaml
+    # apiVersion: v1
+    # kind: Pod
+    # metadata:
+    #   name: webapp
+    # spec:
+    #   containers:
+    #   - name: event-simulator
+    #     image: kodekloud/event-simulator
+    #     env:
+    #     - name: LOG_HANDLERS
+    #       value: file
+    #     volumeMounts:
+    #     - mountPath: /log
+    #      name: log-volume
+    #   volumes:
+    #   - name: log-volume
+    #     hostPath:
+    #       # directory location on host
+    #       path: /var/log/webapp
+    #       # this field is optional
+    #       type: Directory
+
+## Persistent Volume
+    # apiVersion: v1
+    # kind: PersistentVolume
+    # metadata:
+    #   name: pv-log
+    # spec:
+    #   persistentVolumeReclaimPolicy: Retain
+    #   accessModes:
+    #     - ReadWriteMany
+    #   capacity:
+    #     storage: 100Mi
+    #   hostPath:
+    #     path: /pv/log
+k get pv
+
+## Persistent Volume Claim
+    # kind: PersistentVolumeClaim
+    # apiVersion: v1
+    # metadata:
+    #   name: claim-log-1
+    # spec:
+    #   accessModes:
+    #     - ReadWriteMany
+    #   resources:
+    #     requests:
+    #       storage: 50Mi
+
+k get persistentvolumeclaims 
+kubectl get pv,pvc
+kubectl replace --force -f _.yaml
+    # apiVersion: v1
+    # kind: Pod
+    # metadata:
+    #   name: webapp
+    # spec:
+    #   containers:
+    #   - name: event-simulator
+    #     image: kodekloud/event-simulator
+    #     env:
+    #     - name: LOG_HANDLERS
+    #       value: file
+    #     volumeMounts:
+    #     - mountPath: /log
+    #       name: log-volume
+    #   volumes:
+    #   - name: log-volume
+    #     persistentVolumeClaim:
+    #       claimName: claim-log-1
+
+
 ```
 
 ## Secrets
