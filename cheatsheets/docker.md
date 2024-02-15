@@ -1,10 +1,9 @@
 # </ Docker >
 
-```bash
 
-................................................................................
-# app.py
-................................................................................
+## app.py
+
+```bash
 from flask import Flask
 def create_app():
     app = Flask(__name__)
@@ -15,22 +14,22 @@ def create_app():
 app=create_app()
 if __name__ == '__main__':
     app.run(host="0.0.0.0",port=5000,debug=True)
-................................................................................
+```
 
-................................................................................
-# Dockerfile
-. ...............................................................................
+## Dockerfile
+
+```bash
 FROM python:3.10-alpine3.15
 WORKDIR /app
 COPY . /app
 RUN pip install -r requirements.txt
 EXPOSE 3000
 CMD python ./app.py
-................................................................................
+```
 
-................................................................................
-# </Terminal>
-................................................................................
+## Terminal
+
+```bash
 docker build -t datapro-docker .
 docker image ls
 
@@ -44,6 +43,23 @@ docker rmi abcdef123456
 docker image ls
 
 docker ps -a
-................................................................................
 
 ```
+
+## Network
+```bash
+## No network
+docker run --network none nginx
+
+## Host network
+docker run --network host nginx # Auto expose port 
+# Only one container at same time
+
+## Bridge Network
+docker run nginx
+docker network ls   # >>>bridge
+ip link     # >>>docker0:
+
+
+```
+
