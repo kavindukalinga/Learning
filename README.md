@@ -5,6 +5,9 @@ This repo contains the test codes I wrote while learning new things.
 #  Happy New Year 2024
 Happy Learning  01/01/2024
 
+![SVG Image](./cheatsheets/terminal2.svg)
+
+
 <!-- shields.io -->
 <p align="left"> <img src="https://img.shields.io/github/languages/count/kavindukalinga/learning" alt="kavindukalinga" /> <img src="https://img.shields.io/github/languages/top/kavindukalinga/learning" alt="kavindukalinga" /> <img src="https://img.shields.io/github/last-commit/kavindukalinga/learning" alt="kavindukalinga" /></a> </p>
 
