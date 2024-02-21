@@ -1,9 +1,7 @@
-git
 # </ Git >
 
-
 ```bash
-................................................................................  
+
 ssh -T git@bitbucket.org
 cd 
 git clone git@bitbucket.org:kalingachandrasiri/Practice.git
@@ -24,8 +22,87 @@ git push origin featurebr
 git checkout main
 git merge featurebr
 git push origin main
+```
 
-................................................................................
+## Commands c1
+
+```bash
+## Commits
+git clone httpLink repoNameYouLike
+git add .   
+git add file1.txt file3.txt file4.txt # Staging
+git status
+git reset file1.txt     # Unstaging
+
+git commit -m "cmt msg"
+git log
+
+## Branches
+git branch      # Available Branches
+git branch featurebr
+git branch
+
+git checkout featurebr
+
+## Inspect
+git log
+    # Copy the commit hash
+git show commit_hash  # show all the changes in commit
+git show --name-only commit_hash
+
+git reflog  # Give all the steps of --all
+
+## Undo
+git log
+    # copy commit_hash
+git revert commit_hash  # New commit
+:q
+
+# OR
+git reset commit_hash   # Reset all mext commits
+git reset --soft commit_hash # Remove commits but keep changes
+git reset --hard commit_hash # Remove commits with changes
+
+## Merge Branches
+git merge featurebr
+git log
+
+## Pull Requests
+git branch
+git push -f  # Force
+git checkout featurebr
+git push -u origin featurebr
+
+echo newCommit > newcommit.txt
+git add .
+git commit -m "new commit"
+git push
+# Login to github, change branch, add PR
+
+
+## init -h
+git init
+git reomte add
+git diff sourceBr targetBr
+git tag
+git stash
+git stash pop
+git rebase
+git clean
+```
+
+## https to ssh
+
+```bash
+git remote -v
+git remote set-url origin git@github.com:<username>/<repository>.git
+git push origin <branch-name>
+```
+
+
+## Summary
+
+```bash
 
     # Ensure SSH exist
 ls -al ~/.ssh
