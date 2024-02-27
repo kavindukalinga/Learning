@@ -2,6 +2,15 @@
 
 ## Getting Start
 
+```bash
+### Alias and AutoComplete .From kubernetesDocumentation/Cheats
+source <(kubectl completion bash)
+echo "source <(kubectl completion bash)" >> ~/.bashrc
+alias k=kubectl
+complete -o default -F __start_kubectl k
+```
+
+
 <https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/>
 
 <https://minikube.sigs.k8s.io/docs/start/>
@@ -934,11 +943,24 @@ kubectl port-forward
 
 ```
 
+## JSON PATH
+
+```bash
+k get pods -o=jsonpath='{range .items[*]} {.metadata.name}{"\t"}{.status.podIP}{"\n"}{end}'
+k get pods -o=custom-columns=Pod:.metadata.name,IP:.status.podIP
+k get pods --sort-by=.status.podIP
+```
+
 ## Self Tutorial
 
 ```bash
 minikube start
-alias k="kubectl"
+
+### Alias and AutoComplete .From kubernetesDocumentation/Cheats
+source <(kubectl completion bash)
+echo "source <(kubectl completion bash)" >> ~/.bashrc
+alias k=kubectl
+complete -o default -F __start_kubectl k
 
 # session 0:
 k create deployment nginx-deployment --image=nginx
@@ -948,6 +970,9 @@ k scale deployment nginx-deployment --replicas=5
 k scale deployment nginx-deployment --replicas=3
 k expose deployment nginx-deployment --port=8080 --target-port=80
 minikube ssh
+k get pods -o=jsonpath='{range .items[*]} {.metadata.name}{"\t"}{.status.podIP}{"\n"}{end}'
+k get pods -o=custom-columns=Pod:.metadata.name,IP:.status.podIP
+k get pods --sort-by=.status.podIP
 
 # session 1: custom image 
 k create deployment kkdatapro --image=kavindukalinga/dataprocessing
@@ -983,5 +1008,3 @@ kubectl create secret generic db-secret --from-literal=DB_Host=sql01 --from-lite
 
 kubectl -n elastic-stack -it app -- cat /log/app.log  # app=pod name
 ```
-
-
