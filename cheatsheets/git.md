@@ -1,6 +1,6 @@
 # </ Git >
 
-If you are a newbie, Refer [Steps](https://github.com/kavindukalinga/Learning/edit/main/cheatsheets/git.md#instructions-for-newbies) after settingup your remote git repository using SSH.
+If you are a newbie, Refer [Steps](https://github.com/kavindukalinga/Learning/blob/main/cheatsheets/git.md#instructions-for-newbies) after settingup your remote git repository using SSH.
 
 ```bash
 
