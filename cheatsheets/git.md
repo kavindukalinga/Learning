@@ -1,5 +1,7 @@
 # </ Git >
 
+If you are a newbie, Refer [Steps](https://github.com/kavindukalinga/Learning/edit/main/cheatsheets/git.md#instructions-for-newbies) after settingup your remote git repository using SSH.
+
 ```bash
 
 ssh -T git@bitbucket.org
@@ -176,4 +178,59 @@ git switch branch_name   # for Git version 2.23 and later
 git checkout main       # Switch to the branch you want to merge into (e.g., main)
 git merge branch_name   # Merge changes from branch_name into the current branch
 
+```
+
+## Instructions for Newbies:
+Below are step-by-step instructions on how to efficiently work with Git in projects with many branches
+
+#### Clone the Repository:
+Start by cloning the repository to your local machine:
+```bash
+git clone <repository_url>
+cd <repository_name>
+```
+#### Fetch Updates:
+Before starting any work, fetch updates from the remote repository to ensure your local copy is up to date:
+```bash
+git fetch origin
+```
+#### Checkout a Branch:
+Checkout a branch where you will work. If you're working on an existing branch, use:
+```bash
+git checkout <branch_name>
+```
+If you need to create a new branch and switch to it, use:
+```bash
+git checkout -b <new_branch_name>
+```
+#### Make Changes:
+Make your changes to the codebase. You can create, edit, or delete files as needed.
+
+#### Stage and Commit Changes:
+Stage the changes you've made for commit:
+```bash
+git add .
+# Commit the changes with a descriptive commit message:
+git commit -m "Brief description of changes"
+```
+#### Push Changes:
+Push your changes to the remote repository:
+```bash
+git push origin <branch_name>
+```
+#### Review and Merge:
+> Once your changes are pushed, create a pull request (PR) on the repository's platform (e.g., GitHub, GitLab).
+> Request a review from your team members.
+> After the review, make any necessary adjustments based on feedback.
+> Once the PR is approved, merge it into the main branch or the target branch.
+
+#### Cleanup:
+After your changes are merged, clean up your local environment by deleting the branch:
+```bash
+git checkout main (or master)
+git branch -d <branch_name>
+```
+Optionally, fetch updates again to ensure you have the latest changes:
+```bash
+git fetch origin
 ```
