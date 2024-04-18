@@ -1,14 +1,12 @@
 # </ Git >
 
-
 If you are a newbie, Refer [Steps](https://github.com/kavindukalinga/Learning/blob/main/cheatsheets/git.md#instructions-for-newbies) after settingup your remote git repository using SSH.
-
 
 ## git init
 
 ```bash
 < Go iside the Directory >
-git init 
+git init
 git add .
 git commit -m "Initial commit"
 git status
@@ -24,6 +22,7 @@ git pull origin main --rebase
 ```
 
 ## Working on Git
+
 ```bash
 git clone <ssh>
 git branch featurebr
@@ -36,6 +35,17 @@ git pull --rebase origin main
 git push origin featurebr
 ui -> PR
 ui -> Merge
+```
+
+## Git squash
+
+```bash
+git status
+git rebase -i HEAD~4  # Here 4 is number of commits to observe
+# Go to commit to squash and replace pick with squash | it will squash into previous commit
+# Save and next page | Comment unwanted commits | Save
+git log --oneline
+git push origin branchname -f
 ```
 
 ## Git remote configure
@@ -72,12 +82,12 @@ git remote set-url origin git@github.com:<username>/<repository>.git
 git push origin <branch-name>
 ```
 
-## Useful Commands 
+## Useful Commands
 
 ```bash
 ## Commits
 git clone httpLink repoNameYouLike
-git add .   
+git add .
 git add file1.txt file3.txt file4.txt # Staging
 git status
 git reset file1.txt     # Unstaging
@@ -139,33 +149,48 @@ git clean
 ```
 
 ## Instructions for Newbies:
+
 Below are step-by-step instructions on how to efficiently work with Git in projects with many branches
 
 #### Clone the Repository:
+
 Start by cloning the repository to your local machine:
+
 ```bash
 git clone <repository_url>
 cd <repository_name>
 ```
+
 #### Fetch Updates:
+
 Before starting any work, fetch updates from the remote repository to ensure your local copy is up to date:
+
 ```bash
 git fetch --all
 ```
+
 #### Checkout a Branch:
+
 Checkout a branch where you will work. If you're working on an existing branch, use:
+
 ```bash
 git checkout <branch_name>
 ```
+
 If you need to create a new branch and switch to it, use:
+
 ```bash
 git checkout -b <new_branch_name>
 ```
+
 #### Make Changes:
+
 Make your changes to the codebase. You can create, edit, or delete files as needed.
 
 #### Stage and Commit Changes:
+
 Stage the changes you've made for commit:
+
 ```bash
 git add .
 # Commit the changes with a descriptive commit message:
@@ -173,24 +198,33 @@ git commit -m "Brief description of changes"
 
 git pull origin main --rebase
 ```
+
 #### Push Changes:
+
 Push your changes to the remote repository:
+
 ```bash
 git push origin <branch_name>
 ```
+
 #### Review and Merge:
+
 > Once your changes are pushed, create a pull request (PR) on the repository's platform (e.g., GitHub, GitLab).
 > Request a review from your team members.
 > After the review, make any necessary adjustments based on feedback.
 > Once the PR is approved, merge it into the main branch or the target branch.
 
 #### Cleanup:
+
 After your changes are merged, clean up your local environment by deleting the branch:
+
 ```bash
 git checkout main (or master)
 git branch -d <branch_name>
 ```
+
 Optionally, fetch updates again to ensure you have the latest changes:
+
 ```bash
 git fetch --all
 ```

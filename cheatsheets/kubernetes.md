@@ -10,7 +10,6 @@ alias k=kubectl
 complete -o default -F __start_kubectl k
 ```
 
-
 <https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/>
 
 <https://minikube.sigs.k8s.io/docs/start/>
@@ -35,7 +34,7 @@ kubectl get po -A
 ```bash
 ls
 touch pod.yml
-nano pod.yml 
+nano pod.yml
 # apiVersion: v1
 # kind: Pod
 # metadata:
@@ -107,20 +106,20 @@ kubectl delete pods nginx-deployment-86dcfdf4c6-kp979
 kkalinga@ISA-KKALINGA:~$ kubectl get pods -w
 ```
 
-| NAME         |                       READY |  STATUS  |  RESTARTS |  AGE |
-|------------|------------|----------|-------------|--------|
-| nginx-deployment-86dcfdf4c6-kp979  | 1/1 |    Running  | 0        |  18m|
-| nginx-deployment-86dcfdf4c6-rxgf7  | 1/1 |    Running  | 0         | 18m|
-| nginx-deployment-86dcfdf4c6-xnn8h  | 1/1 |    Running   |0         | 18m|
-| nginx-deployment-86dcfdf4c6-kp979  | 1/1 |    Terminating|   0      |    18m|
-| nginx-deployment-86dcfdf4c6-nhfp6  | 0/1 |    Pending     |  0       |   0s|
-| nginx-deployment-86dcfdf4c6-nhfp6  | 0/1 |    Pending      | 0        |  0s|
-| nginx-deployment-86dcfdf4c6-nhfp6  | 0/1 |    ContainerCreating  | 0   |       0s|
-| nginx-deployment-86dcfdf4c6-kp979  | 0/1 |    Terminating         |0    |      18m|
-| nginx-deployment-86dcfdf4c6-kp979  | 0/1 |    Terminating     |    0     |     18m|
-| nginx-deployment-86dcfdf4c6-kp979  | 0/1 |    Terminating      |   0      |    18m|
-| nginx-deployment-86dcfdf4c6-kp979  | 0/1 |    Terminating       |  0       |   18m|
-| nginx-deployment-86dcfdf4c6-nhfp6  | 1/1 |    Running            | 0        |  1s|
+| NAME                              | READY | STATUS            | RESTARTS | AGE |
+| --------------------------------- | ----- | ----------------- | -------- | --- |
+| nginx-deployment-86dcfdf4c6-kp979 | 1/1   | Running           | 0        | 18m |
+| nginx-deployment-86dcfdf4c6-rxgf7 | 1/1   | Running           | 0        | 18m |
+| nginx-deployment-86dcfdf4c6-xnn8h | 1/1   | Running           | 0        | 18m |
+| nginx-deployment-86dcfdf4c6-kp979 | 1/1   | Terminating       | 0        | 18m |
+| nginx-deployment-86dcfdf4c6-nhfp6 | 0/1   | Pending           | 0        | 0s  |
+| nginx-deployment-86dcfdf4c6-nhfp6 | 0/1   | Pending           | 0        | 0s  |
+| nginx-deployment-86dcfdf4c6-nhfp6 | 0/1   | ContainerCreating | 0        | 0s  |
+| nginx-deployment-86dcfdf4c6-kp979 | 0/1   | Terminating       | 0        | 18m |
+| nginx-deployment-86dcfdf4c6-kp979 | 0/1   | Terminating       | 0        | 18m |
+| nginx-deployment-86dcfdf4c6-kp979 | 0/1   | Terminating       | 0        | 18m |
+| nginx-deployment-86dcfdf4c6-kp979 | 0/1   | Terminating       | 0        | 18m |
+| nginx-deployment-86dcfdf4c6-nhfp6 | 1/1   | Running           | 0        | 1s  |
 
 ```bash
 minikube status
@@ -161,7 +160,7 @@ nano service.yml
 #       nodePort: 30007
 
 kubectl apply -f service.yml
-kubectl get svc 
+kubectl get svc
 minikube ip
 # http://192.168.49.2
 # nodePort: 30007
@@ -238,21 +237,21 @@ k apply -f _.yaml
     #       - backend:
     #           service:
     #             name: wear-service
-    #             port: 
+    #             port:
     #               number: 8080
     #         path: /wear
     #         pathType: Prefix
     #       - backend:
     #           service:
     #             name: video-service
-    #             port: 
+    #             port:
     #               number: 8080
     #         path: /stream
     #         pathType: Prefix
     #       - backend:
     #           service:
     #             name: food-service
-    #             port: 
+    #             port:
     #               number: 8080
     #         path: /eat
     #         pathType: Prefix
@@ -276,12 +275,12 @@ kubectl create configmap ingress-nginx-controller --namespace ingress-nginx
 kubectl create serviceaccount ingress-nginx --namespace ingress-nginx
 kubectl create serviceaccount ingress-nginx-admission --namespace ingress-nginx
 # create the Roles, RoleBindings, ClusterRoles, and ClusterRoleBindings for the ServiceAccount
-k get roles -n ingress-nginx 
+k get roles -n ingress-nginx
 # NAME                      CREATED AT
 # ingress-nginx             2024-02-15T08:55:15Z
 # ingress-nginx-admission   2024-02-15T08:55:15Z
 
-k get rolebindings.rbac.authorization.k8s.io -n ingress-nginx 
+k get rolebindings.rbac.authorization.k8s.io -n ingress-nginx
 # NAME                      ROLE                           AGE
 # ingress-nginx             Role/ingress-nginx             87s
 # ingress-nginx-admission   Role/ingress-nginx-admission   87s
@@ -449,7 +448,7 @@ kubectl apply -f ingress-resource.yaml
     #         backend:
     #           service:
     #            name: wear-service
-    #            port: 
+    #            port:
     #             number: 8080
     #       - path: /watch
     #         pathType: Prefix
@@ -498,7 +497,7 @@ kubectl exec -it sample-python-app-5665875f56-2s5hs -- /bin/bash
   # >>> DB-PORT=3306
 
 ## Mount Volumes:
-nano deployment.yml 
+nano deployment.yml
       # containers:
       # - name: python-app
       #   image: abhishekf5/python-sample-app-demo:v1
@@ -521,7 +520,7 @@ kubectl exec -it sample-python-app-6c5b459cc9-4x954 -- /bin/bash
   root@sample-python-app-6c5b459cc9-4x954:/app# cat /opt/db-port | more
   # 3306
 
-nano cm.yml 
+nano cm.yml
 # data:
 #   db-port: "3307"
 
@@ -532,6 +531,7 @@ kubectl exec -it sample-python-app-5894dd7f76-jbtrs -- cat /opt/db-port | more
 ```
 
 ## Persistent Volumes
+
 ```bash
     # k apply -f _.yaml
     # apiVersion: v1
@@ -583,7 +583,7 @@ k get pv
     #     requests:
     #       storage: 50Mi
 
-k get persistentvolumeclaims 
+k get persistentvolumeclaims
 kubectl get pv,pvc
 kubectl replace --force -f _.yaml
     # apiVersion: v1
@@ -638,27 +638,28 @@ echo MzMwNg== | base64 --decode
 
 ## Encrypting Secret at Rest
 
-https://kubernetes.io/docs/tasks/administer-cluster/encrypt-data/
+<https://kubernetes.io/docs/tasks/administer-cluster/encrypt-data/>
 
 ```bash
 kubectl create secret generic my-secret --from-literal=key1=supersecret
 k get secret
-k describe secret my-secret 
+k describe secret my-secret
 k get secret my-secret -o yaml
-var/lib/minikube/certs/etcd 
+var/lib/minikube/certs/etcd
 ```
 
 ## RBAC
+
 ```bash
 
 k get roles -A
 kubectl describe rolebinding kube-proxy -n kube-system
 k auth can-i get pods --as dev-user
 
-# To create a Role:- 
+# To create a Role:-
 kubectl create role developer --namespace=default --verb=list,create,delete --resource=pods
 
-# To create a RoleBinding:- 
+# To create a RoleBinding:-
 kubectl create rolebinding dev-user-binding --namespace=default --role=developer --user=dev-user
 #OR
 kubectl apply -f _.yaml
@@ -694,7 +695,7 @@ k get clusterrolebindings.rbac.authorization.k8s.io | wc -l
 k api-resources
 
 k create clusterrole storage-admin --resources=persistentvolumes,storageclasses --verb=list,create,get,watch
-k create clusterrolebinding michelle-storage-admin --user=michelle --clusterrole=storage-admin 
+k create clusterrolebinding michelle-storage-admin --user=michelle --clusterrole=storage-admin
 
 # OR
 k apply -f _.yaml
@@ -729,6 +730,7 @@ kubectl auth can-i list storageclasses --as michelle  # >>>yes
 ```
 
 ## Service Accounts
+
 ```bash
 k apply -f _.yaml
     # apiVersion: apps/v1
@@ -758,7 +760,7 @@ k apply -f _.yaml
 
 kubectl create serviceaccount dashboard-sa
 
-cat /var/rbac/dashboard-sa-role-binding.yaml 
+cat /var/rbac/dashboard-sa-role-binding.yaml
     # ---
     # kind: RoleBinding
     # apiVersion: rbac.authorization.k8s.io/v1
@@ -793,8 +795,6 @@ cat /var/rbac/pod-reader-role.yaml
 kubectl create token dashboard-sa
 kubectl set serviceaccount deploy/web-dashboard dashboard-sa
 ```
-
-
 
 ## Monitoring
 
@@ -835,6 +835,7 @@ kubectl expose service grafana — type=NodePort — target-port=3000 — name=g
 ```
 
 ## kubernetes upgrade
+
 ```bash
 ## Control plane
 kubectl drain controlplane --ignore-daemonsets
@@ -842,7 +843,7 @@ apt update
 apt-get install kubeadm=1.27.0-00
 kubeadm upgrade apply v1.27.0
 # Note that the above steps can take a few minutes to complete.
-apt-get install kubelet=1.27.0-00 
+apt-get install kubelet=1.27.0-00
 systemctl daemon-reload
 systemctl restart kubelet
 kubectl uncordon controlplane
@@ -853,21 +854,22 @@ ssh node01
 apt-get update
 apt-get install kubeadm=1.27.0-00
 kubeadm upgrade node
-apt-get install kubelet=1.27.0-00 
+apt-get install kubelet=1.27.0-00
 systemctl daemon-reload
 systemctl restart kubelet
 exit
-kubectl uncordon node01 
+kubectl uncordon node01
 
 ```
 
 ## Backup and Restore
+
 ```bash
 ## Backup snapshot
 ETCDCTL_API=3 etcdctl --endpoints=https://[127.0.0.1]:2379 \
 --cacert=/etc/kubernetes/pki/etcd/ca.crt \
 --cert=/etc/kubernetes/pki/etcd/server.crt \
---key=/etc/kubernetes/pki/etcd/server.key \ 
+--key=/etc/kubernetes/pki/etcd/server.key \
 snapshot save /opt/snapshot-pre-boot.db
 
 ## Restore snapshot
@@ -885,6 +887,7 @@ watch "crictl ps | grep etcd"
 ```
 
 ## Certificate Requests
+
 ```bash
 ## csrrequest.yaml
   # apiVersion: certificates.k8s.io/v1
@@ -899,11 +902,10 @@ watch "crictl ps | grep etcd"
   #   usages:
   #   - client auth
 kubectl apply -f csrrequest.yaml
-kubectl get csr 
+kubectl get csr
 kubectl certificate approve/deny akshay
 
 ```
-
 
 ## Useful commands
 
@@ -925,8 +927,8 @@ minikube dashboard
 kubectl create deployment nginx --image=nginx --replicas=3
 kubectl get python-django-sample-app
 kubectl expose deployment nginx --port=8000 --target-port=80
-kubectl get svc 
-kubectl port-forward 
+kubectl get svc
+kubectl port-forward
 
  minikube start
  minikube status
@@ -974,7 +976,7 @@ k get pods -o=jsonpath='{range .items[*]} {.metadata.name}{"\t"}{.status.podIP}{
 k get pods -o=custom-columns=Pod:.metadata.name,IP:.status.podIP
 k get pods --sort-by=.status.podIP
 
-# session 1: custom image 
+# session 1: custom image
 k create deployment kkdatapro --image=kavindukalinga/dataprocessing
 k expose deployment kkdatapro --type=NodePort --port=5000
 k get svc | grep kkdata
@@ -995,12 +997,10 @@ k delete all --all
 
 <https://developers.redhat.com/developer-sandbox/activities/learn-kubernetes-using-red-hat-developer-sandbox-openshift>
 
-
-docker exec -it container_name_or_id /bin/bash
-
-
 ## Udemy
+
 ```bash
+docker exec -it container_name_or_id /bin/bash
 kubectl taint nodes node01 spray=mortein:NoSchedule
 kubectl run nginx --image=nginx --dry-run=client -o yaml > nginx-pod.yaml
 kubectl label node node01 color=blue

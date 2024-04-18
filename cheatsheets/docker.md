@@ -1,6 +1,5 @@
 # </ Docker >
 
-
 ## app.py
 
 ```bash
@@ -36,6 +35,8 @@ docker image ls
 docker container run -d -p 5000:5000 datapro-docker
 docker container ls
 
+docker exec -it c527f2e35f7e /bin/sh
+
 docker stop c527
 docker container ls
 
@@ -47,12 +48,13 @@ docker ps -a
 ```
 
 ## Network
+
 ```bash
 ## No network
 docker run --network none nginx
 
 ## Host network
-docker run --network host nginx # Auto expose port 
+docker run --network host nginx # Auto expose port
 # Only one container at same time
 
 ## Bridge Network
@@ -63,3 +65,15 @@ ip link     # >>>docker0:
 
 ```
 
+## Cleaning
+
+```bash
+# Get all
+docker ps -a && docker images && docker volume ls && docker network ls
+
+# Delete all the images that has no tags (TAG==<none>)
+docker rmi $(docker images -f "dangling=true" -q) --force
+
+# Delete all the container that's not running
+docker rm $(docker ps -a -q -f status=exited)
+```
