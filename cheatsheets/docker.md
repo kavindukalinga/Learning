@@ -1,5 +1,56 @@
 # </ Docker >
 
+## Commnds
+
+```bash
+
+# Running bash
+docker run -it centos bash
+> cat /etc/*release*
+
+docker run -d --name webapp nginx:1.14-alpine
+
+# Running container in detach mode
+docker run -d -p 8080:8080 simple-webapp
+>>> a045bidfyrgfbcirc8urbcrjibvireuv8rvbcri 
+
+# Go to attached mode again
+docker attach a045b
+
+# Details of a container
+docker inspect container-name
+
+# Logs of container (useful in -d mode)
+docker logs container-name
+```
+
+## Docker-Run
+
+```bash
+docker run ubuntu cat /etc/*release*
+
+# -i : interactive mode  -t : pseudo terminal
+docker run -it simple-prompt-app
+>>> Enter: hello
+>>> Output : hello
+
+# mapping volume   volume in docker host : volume in docker container
+docker run -v /opt/datadir:/var/lib/mysql mysql
+
+# Running without port mapping
+docker run -d kavindukalinga/dataprocessing  # port 5000 exposed in the container
+>>>  8e5fdd585affioucuecbeucuievcjnvci
+docker inspect 8e5fdd585aff
+>>>  Networks.bridge.IPAddress = 172.17.0.3
+curl http://172.17.0.3:5000/
+
+# with port mapping
+docker run -p 5000:5000 kavindukalinga/dataprocessing
+curl http://0.0.0.0:5000/
+```
+
+
+
 ## app.py
 
 ```bash
@@ -76,4 +127,13 @@ docker rmi $(docker images -f "dangling=true" -q) --force
 
 # Delete all the container that's not running
 docker rm $(docker ps -a -q -f status=exited)
+
+# To stop all the containers at once, run the command: 
+docker stop $(docker ps -aq)
+
+# To remove all the stopped containers at once, run the command: 
+docker rm $(docker ps -aq)
+
+# To remove all the images at once: 
+docker rmi $(docker images -aq)
 ```
