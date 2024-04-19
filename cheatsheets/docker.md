@@ -28,6 +28,7 @@ docker logs container-name
 
 ```bash
 docker run ubuntu cat /etc/*release*
+docker run -it ubuntu bash
 
 # -i : interactive mode  -t : pseudo terminal
 docker run -it simple-prompt-app
@@ -47,34 +48,56 @@ curl http://172.17.0.3:5000/
 # with port mapping
 docker run -p 5000:5000 kavindukalinga/dataprocessing
 curl http://0.0.0.0:5000/
-```
 
-
-
-## app.py
-
-```bash
-from flask import Flask
-def create_app():
-    app = Flask(__name__)
-    app.config['SECRET_KEY'] = 'secretkey12345'
-    from views import views
-    app.register_blueprint(views, url_prefix='/')
-    return app
-app=create_app()
-if __name__ == '__main__':
-    app.run(host="0.0.0.0",port=5000,debug=True)
+# Environment Variables
+docker run -d -e MYSQL_ROOT_PASSWORD=db_pass123 --name mysql-db mysql
+docker exec -it mysql-db env
 ```
 
 ## Dockerfile
 
 ```bash
+# Instructions     Arguments
+FROM Ubuntu
+RUN apt-get update && apt-get -y install python && apt-get -y install python-pip
+RUN pip install flask flask-mysql
+COPY . /opt/source-code
+ENTRYPOINT FLASK_APP=/opt/source-code/app.py flask run
+------------------------------
 FROM python:3.10-alpine3.15
 WORKDIR /app
 COPY . /app
 RUN pip install -r requirements.txt
 EXPOSE 3000
 CMD python ./app.py
+
+docker build . -f Dockerfile -t kavindukalinga/flaskapp1 
+# Layered Architecture (cached layers)
+docker history kavindukalinga/flaskapp1
+```
+
+## Command vs Entrypoint
+
+```bash
+Entrypoint - appends commands
+CMD - replace commands
+------------------------
+FROM Ubuntu
+ENTRYPOINT ["sleep","5"]   or | ENTRYPOINT sleep 5
+> docker run sleeper 
+------------------------
+FROM Ubuntu
+CMD ["sleep","5"]   or | CMD sleep 5
+> docker run sleeper 
+> docker run sleeper sleep 10
+------------------------
+FROM Ubuntu
+ENTRYPOINT ["sleep"]
+CMD ["5"]
+> docker run sleeper 
+> docker run sleeper 10
+> docker run --entrypoint notsleep sleeper 10
+------------------------
 ```
 
 ## Terminal

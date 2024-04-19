@@ -11,6 +11,14 @@ xdg-open 'FileName.png'
 nano filename.text	# Ctrl+X - save and exit
 vim filename.text	# i - insert, #Esc :wq - save and exit
 
+# Save a text without pacakages
+cat > test4.txt
+---content---
+---content---
+^C
+cat test4.txt
+>>> --content---
+
 # Read text:
 cat a.txt
 more a.txt
