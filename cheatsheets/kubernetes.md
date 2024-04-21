@@ -948,6 +948,33 @@ kubectl port-forward
 ## JSON PATH
 
 ```bash
+echo "cat q2.json | jpath $.bus" > answer2.sh
+
+# $ list at the beginning
+cat q4.json | jpath $[1,3].model   # only give [3]
+cat q4.json | jpath '$[1,3].model' # correct
+cat q4.json | jpath '$[1,3]'.model # correct
+cat q4.json | jpath '$[*]'  # correct
+# But list in the middle works
+cat q5.json | jpath $.car.wheels[1,3].model
+
+# wild-card *
+$.car.wheels[0].model
+$.car.wheels[*].model
+$.*.wheels[*].model
+cat q4.json | jpath '$[*].model'
+
+# If
+cat q9.json | jpath '$.prizes[?(@.year == 2014)].laureates[*].firstname'
+cat input.json | jpath '$[?(@=="In Ltd")]'
+
+# List
+cat input.json | jpath '$[-1:]'
+cat input.json | jpath '$[-5:]'.age
+
+# For k8s
+cat input.json | jpath $.metadata.name
+
 k get pods -o=jsonpath='{range .items[*]} {.metadata.name}{"\t"}{.status.podIP}{"\n"}{end}'
 k get pods -o=custom-columns=Pod:.metadata.name,IP:.status.podIP
 k get pods --sort-by=.status.podIP
