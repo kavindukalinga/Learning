@@ -22,6 +22,12 @@ docker inspect container-name
 
 # Logs of container (useful in -d mode)
 docker logs container-name
+
+# Stop the container
+docker stop container-name
+
+# Remove the stopped container
+docker rm container-name
 ```
 
 ## Docker-Run
@@ -98,27 +104,6 @@ CMD ["5"]
 > docker run sleeper 10
 > docker run --entrypoint notsleep sleeper 10
 ------------------------
-```
-
-## Terminal
-
-```bash
-docker build -t datapro-docker .
-docker image ls
-
-docker container run -d -p 5000:5000 datapro-docker
-docker container ls
-
-docker exec -it c527f2e35f7e /bin/sh
-
-docker stop c527
-docker container ls
-
-docker rmi abcdef123456
-docker image ls
-
-docker ps -a
-
 ```
 
 ## Network
