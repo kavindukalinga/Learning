@@ -37,6 +37,29 @@ ui -> PR
 ui -> Merge
 ```
 
+## git commands
+
+```bash
+# init
+git init
+
+# add
+git add file1 file2
+git add .
+
+# commit 
+git commit
+git commit -m "add commit message : present tense"
+
+# log
+git log
+git log --abbrev-commit # shorter commit hash
+git log --oneline # first line of wach commit msg
+# [Doc](https://git-scm.com/docs/git-log)
+
+```
+
+
 ## Git squash
 
 ```bash
@@ -139,7 +162,7 @@ git push
 
 ## init -h
 git init
-git reomte add
+git remote add
 git diff sourceBr targetBr
 git tag
 git stash
