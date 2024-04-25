@@ -58,6 +58,72 @@ curl http://0.0.0.0:5000/
 # Environment Variables
 docker run -d -e MYSQL_ROOT_PASSWORD=db_pass123 --name mysql-db mysql
 docker exec -it mysql-db env
+
+# Restart
+docker run -d -p 5000:5000 --restart=always --name my-registry registry:2
+
+# link
+docker container run -d --name=redis redis:alpine
+docker run -d --name=clickcounter --link redis:redis -p 8085:5000 kodekloud/click-counter
+# docker-compose.yml
+#         services:
+#           redis:
+#             image: redis:alpine
+#           clickcounter:
+#             image: kodekloud/click-counter
+#             ports:
+#             - 8085:5000
+#         version: '3.0'
+
+# control-groups
+docker run --cpu=.5 ubuntu
+docker run --memory=100m ubuntu
+```
+
+## Docker Storage
+
+```bash
+# Docker volume
+docker volume create data_volume    # /var/lib/docker/volumes/data_volume
+
+# volume mount : mount from volume directory
+docker run -v data_volume:/var/lib/mysql mysql  # automatic create volume
+
+# bind mount : mount from any location on docker host
+docker run -v /data/mysql:/var/lib/mysql mysql
+
+# best practice
+docker run\
+--mount type=bind,source=/data/mysql,target=/var/lib/mysql mysql
+```
+
+## Docker Network
+
+```bash
+## No network
+docker run --network none nginx
+
+## Host network
+docker run --network host nginx # Auto expose port
+# Only one container at same time
+
+## Bridge Network
+docker run nginx
+docker network ls   # >>>bridge
+ip link     # >>>docker0:
+
+# create network
+docker network create \
+    --driver bridge \
+    --subnet 182.18.0.0/16
+    custom-isolated-network
+
+# Inspect network
+docker inspect container-name # --> Networks 
+
+# Embedded DNS
+mysql.connect(mysql-container-name)
+# Default DNS server running on 127.0.0.11
 ```
 
 ## Dockerfile
@@ -106,24 +172,6 @@ CMD ["5"]
 ------------------------
 ```
 
-## Network
-
-```bash
-## No network
-docker run --network none nginx
-
-## Host network
-docker run --network host nginx # Auto expose port
-# Only one container at same time
-
-## Bridge Network
-docker run nginx
-docker network ls   # >>>bridge
-ip link     # >>>docker0:
-
-
-```
-
 ## Cleaning
 
 ```bash
@@ -144,4 +192,29 @@ docker rm $(docker ps -aq)
 
 # To remove all the images at once: 
 docker rmi $(docker images -aq)
+docker image prune -a
+```
+
+## Docker-Registry
+
+```bash
+# Private Registry : init
+docker run -d -p 5000:5000 --name registry registry:2
+docker run -d -p 5000:5000 --restart=always --name my-registry registry:2
+
+# Re-tag image appropriately
+docker image tag my-image localhost:5000/my-image
+# push your own images to registry
+docker push localhost:5000/my-image
+# pull images
+docker pull localhost:5000/my-image
+# To check the list of images pushed
+curl -X GET localhost:5000/v2/_catalog
+```
+
+## Docker Swarm
+
+```bash
+# Run in manager node
+docker service --replicas=3 docker-image-name
 ```
