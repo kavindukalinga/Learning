@@ -1,8 +1,8 @@
 # </ Linux >
 
 ```bash
-
-cl<Tab>
+# See all the processes running
+ps -eaf | head
 
 # Open a file:
 xdg-open 'FileName.png'
