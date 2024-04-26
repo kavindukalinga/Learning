@@ -1,5 +1,10 @@
 # </ Docker >
 
+```bash
+docker version
+docker info
+```
+
 ## Commnds
 
 ```bash
@@ -30,11 +35,22 @@ docker stop container-name
 docker rm container-name
 ```
 
+## Docker Images
+
+```bash
+docker pull image-name:image-tag
+docker images
+docker history image-id
+docker history image-name
+```
+
 ## Docker-Run
 
 ```bash
 docker run ubuntu cat /etc/*release*
 docker run -it ubuntu bash
+docker run -v /opt/data:/var/lib/mysql -d --name mysql-db -e MYSQL_ROOT_PASSWORD=db_pass123 mysql
+docker exec mysql-db mysql -pdb_pass123 -e 'use databse-name; select * from myTable'
 
 # -i : interactive mode  -t : pseudo terminal
 docker run -it simple-prompt-app
@@ -83,6 +99,18 @@ docker run --memory=100m ubuntu
 ## Docker Storage
 
 ```bash
+# Storage
+docker info | grep  'Docker Root Dir'
+>>> Docker Root Dir: /var/lib/docker
+
+docker system df
+    # TYPE            TOTAL     ACTIVE    SIZE      RECLAIMABLE
+    # Images          29        6         9.809GB   7.47GB (76%)
+    # Containers      9         2         313.7MB   7.953MB (2%)
+    # Local Volumes   10        3         10.49GB   10.07GB (95%)
+    # Build Cache     254       0         3.23GB    3.23GB
+docker system df -v 
+
 # Docker volume
 docker volume create data_volume    # /var/lib/docker/volumes/data_volume
 
@@ -100,6 +128,10 @@ docker run\
 ## Docker Network
 
 ```bash
+# Networks
+docker network ls
+docker network inspect bridge
+
 ## No network
 docker run --network none nginx
 
@@ -117,6 +149,10 @@ docker network create \
     --driver bridge \
     --subnet 182.18.0.0/16
     custom-isolated-network
+docker network create --driver bridge --subnet 182.18.0.1/24 --gateway 182.18.0.1 wp-mysql-network
+docker network inspect wp-mysql-network
+docker run -d -e MYSQL_ROOT_PASSWORD=db_pass123 --name mysql-db --network wp-mysql-network mysql:5.6
+docker run --network=wp-mysql-network -e DB_Host=mysql-db -e DB_Password=db_pass123 -p 38080:8080 --name webapp --link mysql-db:mysql-db -d kodekloud/simple-webapp-mysql
 
 # Inspect network
 docker inspect container-name # --> Networks 
