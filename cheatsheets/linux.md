@@ -1,6 +1,12 @@
 # </ Linux >
 
 ```bash
+# Add user
+sudo adduser bob
+sudo usermod -aG sudo bob
+sudo login bob
+sudo -i
+
 # See all the processes running
 ps -eaf | head
 
