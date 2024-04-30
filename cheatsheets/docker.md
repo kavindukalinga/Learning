@@ -5,7 +5,22 @@ docker version
 docker info
 ```
 
-## Commnds
+## Table of Contents
+
+- [\</ Docker \>](#-docker-)
+  - [Table of Contents](#table-of-contents)
+  - [Commands](#commands)
+  - [Docker Images](#docker-images)
+  - [Docker-Run](#docker-run)
+  - [Docker Storage](#docker-storage)
+  - [Docker Network](#docker-network)
+  - [Dockerfile](#dockerfile)
+  - [Command vs Entrypoint](#command-vs-entrypoint)
+  - [Cleaning](#cleaning)
+  - [Docker-Registry](#docker-registry)
+  - [Docker Swarm](#docker-swarm)
+
+## Commands
 
 ```bash
 
