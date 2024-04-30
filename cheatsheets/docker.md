@@ -138,6 +138,10 @@ docker run -v /data/mysql:/var/lib/mysql mysql
 # best practice
 docker run\
 --mount type=bind,source=/data/mysql,target=/var/lib/mysql mysql
+
+# Docker copy
+docker cp example.txt my-container:/app
+docker cp my-directory my-container:/app
 ```
 
 ## Docker Network
