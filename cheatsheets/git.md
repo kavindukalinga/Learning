@@ -2,6 +2,27 @@
 
 If you are a newbie, Refer [Steps](https://github.com/kavindukalinga/Learning/blob/main/cheatsheets/git.md#instructions-for-newbies) after settingup your remote git repository using SSH.
 
+## Table of Contents
+
+- [\</ Git \>](#-git-)
+  - [Table of Contents](#table-of-contents)
+  - [git init](#git-init)
+  - [Working on Git](#working-on-git)
+  - [git commands](#git-commands)
+  - [Git squash](#git-squash)
+  - [Git remote configure](#git-remote-configure)
+  - [https to ssh](#https-to-ssh)
+  - [Useful Commands](#useful-commands)
+  - [Instructions for Newbies:](#instructions-for-newbies)
+      - [Clone the Repository:](#clone-the-repository)
+      - [Fetch Updates:](#fetch-updates)
+      - [Checkout a Branch:](#checkout-a-branch)
+      - [Make Changes:](#make-changes)
+      - [Stage and Commit Changes:](#stage-and-commit-changes)
+      - [Push Changes:](#push-changes)
+      - [Review and Merge:](#review-and-merge)
+      - [Cleanup:](#cleanup)
+
 ## git init
 
 ```bash
