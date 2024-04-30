@@ -1,5 +1,18 @@
 # Summary
 
+## Contents
+
+- [Summary](#summary)
+  - [Contents](#contents)
+  - [Values scope](#values-scope)
+  - [The `.Values` set](#the-values-set)
+  - [Other built-in objects](#other-built-in-objects)
+  - [Templates playground](#templates-playground)
+  - [Template functions](#template-functions)
+  - [Flow control with if conditionals](#flow-control-with-if-conditionals)
+  - [Looping with range](#looping-with-range)
+  - [Named templates](#named-templates)
+
 ## Values scope
 
 In Helm, values can be accessed using the dot (.) notation. The tree starts with the outermost dot followed by the child values.
