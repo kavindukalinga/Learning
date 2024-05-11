@@ -3,6 +3,9 @@
 ```bash
 docker version
 docker info
+
+# Add user 
+sudo usermod -aG docker user
 ```
 
 ## Table of Contents
@@ -57,6 +60,9 @@ docker pull image-name:image-tag
 docker images
 docker history image-id
 docker history image-name
+
+# Get Images from running container
+docker commit alpine_nautilus alpine:nautilus
 ```
 
 ## Docker-Run

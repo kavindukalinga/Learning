@@ -64,9 +64,17 @@ ui -> Merge
 # init
 git init
 
-# add
+# stage
 git add file1 file2
 git add .
+
+# Unstage
+git reset HEAD
+git reset HEAD <file1> <file2> ...
+
+# Remove untracked files
+git clean -f
+git clean -f y8113.xml y822.txt y8284.cnf ...
 
 # commit 
 git commit
@@ -77,6 +85,7 @@ git log
 git log --abbrev-commit # shorter commit hash
 git log --oneline # first line of wach commit msg
 # [Doc](https://git-scm.com/docs/git-log)
+
 
 ```
 
